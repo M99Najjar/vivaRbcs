@@ -1,5 +1,4 @@
 const express = require("express");
-const { app } = require("firebase-admin");
 const router = express.Router();
 const { isLogedin } = require("../middlewares/isLogedin");
 const { isAdmin } = require("../middlewares/isAdmin");

@@ -8,7 +8,6 @@ const {
 } = require("../controllers/facultiesController");
 const { isLogedin } = require("../middlewares/isLogedin");
 const { isAdmin } = require("../middlewares/isAdmin");
-const { app } = require("firebase-admin");
 
 const router = express.Router();
 router.use(isLogedin);
