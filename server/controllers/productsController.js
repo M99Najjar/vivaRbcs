@@ -1,5 +1,5 @@
 const pool = require("../db");
-const { Products } = require("../models/product");
+const { Products } = require("../models/Product");
 
 /*get single product*/
 const getProduct = async (req, res) => {
