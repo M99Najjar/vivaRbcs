@@ -11,7 +11,7 @@ const {
   updateLecture,
   getPdfLecture,
   getLecturesBy,
-} = require("../controllers/lecturesController");
+} = require("../controllers/LecturesController.js");
 
 router.use(isLogedin);
 
