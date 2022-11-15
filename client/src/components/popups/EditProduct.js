@@ -4,8 +4,11 @@ import ErrorsBox from "../form/ErrorsBox";
 import MessagesBox from "../form/MessagesBox";
 import TextInput from "../form/TextInput";
 import UploadBtn from "../form/UploadBtn";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const AddDoctor = ({ closePopup, product }) => {
+  const { user } = useAuthContext();
+
   const defaultProductName = product.product_name;
   const defaultDescription = product.description;
 
@@ -33,6 +36,11 @@ const AddDoctor = ({ closePopup, product }) => {
     try {
       const res = await api.patch(
         `/api/products/${product.product_id}`,
+        {
+          headers: {
+            Authorization: `Basic ${user.token}`,
+          },
+        },
         formData
       );
       setmessages(res.data["message"]);
@@ -48,7 +56,11 @@ const AddDoctor = ({ closePopup, product }) => {
     setmessages("");
 
     try {
-      const res = await api.delete(`/api/products/${product.product_id}`);
+      const res = await api.delete(`/api/products/${product.product_id}`, {
+        headers: {
+          Authorization: `Basic ${user.token}`,
+        },
+      });
       setmessages(res.data["message"]);
       window.location.reload(false);
     } catch (error) {

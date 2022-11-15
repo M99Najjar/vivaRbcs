@@ -6,6 +6,7 @@ import EditProduct from "../components/popups/EditProduct";
 import { FaPlus } from "react-icons/fa";
 import Table from "../components/Table";
 import PopUp from "../components/popups/PopUp";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const HeadersList = [
   { displayName: "المنتج", dbName: "product_name" },
@@ -13,12 +14,18 @@ const HeadersList = [
 ];
 
 const ProductsPage = () => {
+  const { user } = useAuthContext();
+
   const [products, setProducts] = useState([]);
   const [popup, setPopup] = useState(false);
   const [selectedProduct, setlectProduct] = useState("");
 
   let getData = async () => {
-    const response = await api.get("/api/products");
+    const response = await api.get("/api/products", {
+      headers: {
+        Authorization: `Basic ${user.token}`,
+      },
+    });
     setProducts(response.data);
   };
 
