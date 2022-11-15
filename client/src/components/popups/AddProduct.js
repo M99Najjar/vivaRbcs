@@ -3,21 +3,16 @@ import { api, get } from "../api";
 import ErrorsBox from "../form/ErrorsBox";
 import MessagesBox from "../form/MessagesBox";
 import TextInput from "../form/TextInput";
-import UploadBtn from "../form/UploadBtn";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 const AddDoctor = ({ closePopup }) => {
+  const { user } = useAuthContext();
+
   const [messages, setmessages] = useState("");
   const [errors, setErrors] = useState("");
 
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
-
-  const [file, setFile] = useState("");
-
-  const handelFileBtn = async (e) => {
-    setFile(e.target.files[0]);
-    setProductName(e.target.files[0].name.split(".")[0]);
-  };
 
   const onsubmit = async (e) => {
     e.preventDefault();
@@ -28,7 +23,15 @@ const AddDoctor = ({ closePopup }) => {
     formData.append("description", description);
 
     try {
-      const res = await api.post("/api/products", formData);
+      const res = await api.post(
+        "/api/products",
+        {
+          headers: {
+            Authorization: `Basic ${user.token}`,
+          },
+        },
+        formData
+      );
       setmessages(res.data.message);
 
       setTimeout(() => {

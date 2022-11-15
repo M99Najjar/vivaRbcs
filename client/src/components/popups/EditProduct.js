@@ -3,8 +3,7 @@ import { api, get } from "../api";
 import ErrorsBox from "../form/ErrorsBox";
 import MessagesBox from "../form/MessagesBox";
 import TextInput from "../form/TextInput";
-import UploadBtn from "../form/UploadBtn";
-import { useAuthContext } from "../hooks/useAuthContext";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 const AddDoctor = ({ closePopup, product }) => {
   const { user } = useAuthContext();
