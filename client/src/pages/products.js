@@ -65,6 +65,7 @@ const ProductsPage = () => {
               <FaPlus className="text-gray-400 text-7xl" />
             </div>
             <div className=" w-56 h-56 bg-white mt-2 rounded-lg"></div>
+            <div className=" w-56 h-36 bg-white mt-2 rounded-lg"></div>
           </div>
         </div>
       </div>

@@ -33,7 +33,6 @@ const EditLecture = ({ closePopup, lecture }) => {
   const defaultLectureName = lecture.lecture_name;
   const defaultSubject = lecture.subject_id;
   const defaultDoctor = lecture.doctor_id;
-  console.log(lecture.lecture_id);
 
   const [messages, setmessages] = useState();
   const [errors, setErrors] = useState();

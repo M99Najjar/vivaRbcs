@@ -1,17 +1,15 @@
 import { useEffect } from "react";
 import { useSignin } from "../../hooks/useSignin";
+import ErrorsBox from "../form/ErrorsBox";
 
 const Login = () => {
   const { signin, error, isLoading } = useSignin();
 
   const handleCredentialResponse = async (response) => {
-    console.log("Encoded JWT ID token: " + response.credential);
-    const bodyObj = { token: response.credential };
     const id_token = response.credential;
     signin(id_token);
   };
   useEffect(() => {
-    console.log(process.env.REACT_APP_CLIENT_ID);
     /* global google */
     google.accounts.id.initialize({
       client_id: process.env.REACT_APP_CLIENT_ID,
@@ -26,7 +24,13 @@ const Login = () => {
     //google.accounts.id.prompt();
   }, []);
 
-  return <div id="buttonDiv"></div>;
+  return (
+    <>
+      <div id="buttonDiv"></div>
+      <div className=" m-3" />
+      <ErrorsBox errors={error} />
+    </>
+  );
 };
 
 export default Login;

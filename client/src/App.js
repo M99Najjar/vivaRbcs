@@ -46,7 +46,15 @@ function App() {
           </Route>
           <Route
             path="/Login"
-            element={!user ? <LoginPage /> : <Navigate to="/user/edit" />}
+            element={
+              !user ? (
+                <LoginPage />
+              ) : user.user.user_year ? (
+                <Navigate to="/lectures" />
+              ) : (
+                <Navigate to="/user/edit" />
+              )
+            }
           ></Route>
           <Route
             path="/user/edit"

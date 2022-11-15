@@ -47,7 +47,7 @@ const AddDoctor = ({ closePopup }) => {
     <>
       <div className="bg-white w-96 rounded-lg py-4 px-8 shadow-xl">
         {/*----- Title ----- */}
-        <h1 className="text-center text-5xl mx-6 my-5">إضافة محاضرة</h1>
+        <h1 className="text-center text-5xl mx-6 my-5">إضافة منتج</h1>
         {/*----- form ----- */}
         <form onSubmit={onsubmit}>
           <div className="flex gap-3">
@@ -60,9 +60,6 @@ const AddDoctor = ({ closePopup }) => {
                   setProductName(e.target.value);
                 }}
               />
-            </div>
-            <div className="flex-2 mt-8">
-              <UploadBtn onChange={handelFileBtn} file={file} />
             </div>
           </div>
           <TextInput

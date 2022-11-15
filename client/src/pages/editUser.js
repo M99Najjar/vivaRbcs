@@ -30,8 +30,6 @@ const EditUserPage = () => {
   );
   const [errors, setErrors] = useState("");
   const [messages, setMessages] = useState("");
-  console.log(user.user);
-  console.log(userName, userYear, userFaculty);
 
   async function handlSubmit(e) {
     e.preventDefault();
@@ -53,7 +51,6 @@ const EditUserPage = () => {
       user.user.user_name = userName;
       user.user.user_year = userYear;
       user.user.user_faculty_id = userFaculty;
-      console.log(user);
       localStorage.setItem("user", JSON.stringify(user));
       dispach({ type: "LOGIN", payload: user });
       setTimeout(() => {
@@ -62,7 +59,6 @@ const EditUserPage = () => {
 
       //window.location.reload(false);
     } catch (error) {
-      console.log(error);
       setErrors(error.response.data.message);
     }
   }

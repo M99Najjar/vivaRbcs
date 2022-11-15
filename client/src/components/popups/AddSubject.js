@@ -22,12 +22,12 @@ const facultiesList = [
   { faculty_id: 4, faculty_name: "الصيدلة" },
 ];
 
-const defaultYear = 2;
-const defaultSeason = 1;
-const dafaultFaculty = 1;
-
 const AddDoctor = ({ closePopup }) => {
   const { user } = useAuthContext();
+  const defaultYear = user.user.user_year;
+  const defaultSeason = 1;
+  const dafaultFaculty = user.user.user_faculty_id;
+
   const [messages, setmessages] = useState();
   const [errors, setErrors] = useState();
 

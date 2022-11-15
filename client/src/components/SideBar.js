@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaChalkboardTeacher, FaBook, FaStore } from "react-icons/fa";
+import { FaChalkboardTeacher, FaBook, FaStore, FaEdit } from "react-icons/fa";
 import { IoIosPaper } from "react-icons/io";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useLogout } from "../hooks/useLogout";
@@ -61,7 +61,9 @@ const SideBar = () => {
             <div className="w-40 h-40  overflow-hidden">
               <ProfileSVG className="w-40 h-40" />
             </div>
-            <h1 className="text-center mt-4 text-xl font-bold">
+
+            <h1 className="text-center mt-4 text-xl font-bold flex ">
+              <FaEdit className="m-1" />
               {user.user.user_name}
             </h1>
             <div
@@ -87,9 +89,15 @@ const SideBar = () => {
         </ul>
       </div>
       {/*last section*/}
-      <div className="h-5 w-56 bg-black absolute bottom-0 right-0 flex justify-center items-center hover:cursor-pointer">
+
+      <div
+        className="h-5 w-56 bg-black absolute bottom-0 right-0 flex justify-center items-center hover:cursor-pointer"
+        onClick={() => {
+          window.open("https://cortex-group.net/");
+        }}
+      >
         <p className="text-white text-xs">
-          created and maintainend by cortex media
+          created and maintainend by cortex-group
         </p>
       </div>
     </div>

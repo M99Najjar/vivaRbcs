@@ -78,9 +78,6 @@ const AddDoctor = ({ closePopup, product }) => {
                 }}
               />
             </div>
-            <div className="flex-2 mt-8">
-              <UploadBtn onChange={handelFileBtn} file={file} />
-            </div>
           </div>
           <TextInput
             label="الشرح"

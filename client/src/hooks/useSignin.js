@@ -18,15 +18,18 @@ export const useSignin = () => {
     if (response.status !== 200) {
       setIsLoding(false);
       setError(response.error);
-      console.log(response.error);
     }
     if (response.status === 200) {
-      //save username and photo
-      localStorage.setItem("user", JSON.stringify(response.data));
+      if (response.data.user.user_role === 1) {
+        //save username and photo
+        localStorage.setItem("user", JSON.stringify(response.data));
 
-      //update auth context
-      dispach({ type: "LOGIN", payload: response.data });
-      setIsLoding(false);
+        //update auth context
+        dispach({ type: "LOGIN", payload: response.data });
+        setIsLoding(false);
+      } else {
+        setError("ليس لديك الصلاحية");
+      }
     }
   };
   return { signin, isLoading, error };

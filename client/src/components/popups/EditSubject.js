@@ -86,7 +86,6 @@ const AddDoctor = ({ closePopup, subject }) => {
     setmessages("");
 
     try {
-      console.log(subject.subject_id);
       const res = await api.delete(`/api/subjects/${subject.subject_id}`, {
         headers: {
           Authorization: `Basic ${user.token}`,
