@@ -35,12 +35,12 @@ const AddDoctor = ({ closePopup, product }) => {
     try {
       const res = await api.patch(
         `/api/products/${product.product_id}`,
+        formData,
         {
           headers: {
             Authorization: `Basic ${user.token}`,
           },
-        },
-        formData
+        }
       );
       setmessages(res.data["message"]);
       window.location.reload(false);

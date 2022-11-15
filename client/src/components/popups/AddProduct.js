@@ -23,22 +23,18 @@ const AddDoctor = ({ closePopup }) => {
     formData.append("description", description);
 
     try {
-      const res = await api.post(
-        "/api/products",
-        {
-          headers: {
-            Authorization: `Basic ${user.token}`,
-          },
+      const res = await api.post("/api/products", formData, {
+        headers: {
+          Authorization: `Basic ${user.token}`,
         },
-        formData
-      );
+      });
       setmessages(res.data.message);
 
       setTimeout(() => {
         window.location.reload(false);
       }, 1000);
     } catch (error) {
-      setErrors("المحاضرة موجودة بالفعل");
+      setErrors(error.response.data.message);
     }
   };
 
