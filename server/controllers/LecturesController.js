@@ -166,7 +166,7 @@ const getLecturesBy = async (req, res) => {
       "SELECT * FROM lectures WHERE doctor_id=$1;",
       [doctor_id]
     );
-    const lecture = query.rows[0];
+    const lecture = query.rows;
     res.status(200).json(lecture);
   } catch (error) {
     handleErrors(req, res, error);
