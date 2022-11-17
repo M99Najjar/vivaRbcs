@@ -152,7 +152,7 @@ const getPdfLecture = async (req, res) => {
     const lecture = query.rows[0];
     console.log(lecture);
 
-    const fileName = `D:/Projects/PERN stack/pern/server/uploads/${lecture.lecture_name}.pdf`;
+    const fileName = `${__dirname}/../uploads/${lecture.lecture_name}.pdf`;
     res.sendFile(fileName);
   } catch (error) {
     handleErrors(req, res, error);
