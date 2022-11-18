@@ -1,6 +1,7 @@
 const pool = require("../db");
 const { Lectures } = require("../models/Lecture");
 const fs = require("fs");
+const path = require("path");
 
 /*get single lectures*/
 const getLecture = async (req, res) => {
@@ -152,8 +153,13 @@ const getPdfLecture = async (req, res) => {
     const lecture = query.rows[0];
     console.log(lecture);
 
-    const fileName = `${__dirname}/../uploads/${lecture.lecture_name}.pdf`;
-    res.sendFile(fileName);
+    let indexPath = path.join(
+      __dirname,
+      `../uploads/${lecture.lecture_name}.pdf`
+    );
+    console.log(indexPath);
+
+    res.sendFile(indexPath);
   } catch (error) {
     handleErrors(req, res, error);
   }
