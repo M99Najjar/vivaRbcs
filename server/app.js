@@ -20,7 +20,7 @@ const { logRequests } = require("./middlewares/logRequests");
 //middle ware
 app.use(logRequests);
 //app.use(delay);
-app.use(cors({ origin: process.env.ORIGIN }));
+app.use(cors());
 app.use(express.json());
 app.use(
   fileUpload({
