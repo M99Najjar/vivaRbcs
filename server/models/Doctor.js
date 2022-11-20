@@ -4,7 +4,7 @@ const Doctors = {
   find: {
     all: async () => {
       return pool.query(
-        "SELECT doctor_id, doctor_name, university_name,faculty_id, faculty_name, subject_id, subject_name, year, season  FROM doctors JOIN subjects USING(subject_id) JOIN faculties USING(faculty_id) JOIN universities USING(university_id) ORDER BY doctor_id DESC;"
+        "SELECT doctor_id, doctor_name, university_name,faculty_id, faculty_name, subject_id, subject_name, year, season  FROM doctors JOIN subjects USING(subject_id) JOIN faculties USING(faculty_id) JOIN universities USING(university_id) ORDER BY year ASC;"
       );
     },
 

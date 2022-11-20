@@ -4,7 +4,7 @@ const Subjects = {
   find: {
     all: async () => {
       return await pool.query(
-        "SELECT subject_id,subject_name,year,season,faculty_id,faculty_name,university_name FROM subjects JOIN faculties USING(faculty_id) JOIN universities USING(university_id) ORDER BY subject_id DESC;"
+        "SELECT subject_id,subject_name,year,season,faculty_id,faculty_name,university_name FROM subjects JOIN faculties USING(faculty_id) JOIN universities USING(university_id) ORDER BY year ASC;"
       );
     },
 
