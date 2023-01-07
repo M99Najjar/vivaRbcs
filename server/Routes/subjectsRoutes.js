@@ -6,6 +6,7 @@ const {
   deleteSubject,
   updateSubject,
   getSubjectBy,
+  getSubjectIcon,
 } = require("../controllers/subjectsController");
 const { isLogedin } = require("../middlewares/isLogedin");
 const { isAdmin } = require("../middlewares/isAdmin");
@@ -15,6 +16,7 @@ router.use(isLogedin);
 
 router.get("/", getSubjects);
 router.get("/by", getSubjectBy);
+router.get("/icon/:subject_id", getSubjectIcon);
 router.get("/:subject_id", getSubject);
 
 router.post("/", isAdmin, addSubject);

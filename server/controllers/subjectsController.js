@@ -1,5 +1,7 @@
 const pool = require("../db");
 const { Subjects } = require("../models/Subject");
+const fs = require("fs");
+const path = require("path");
 
 /*get single subject*/
 const getSubject = async (req, res) => {
@@ -28,6 +30,12 @@ const addSubject = async (req, res) => {
   console.log("starting");
   const { subject_name, year, season, faculty_id } = req.body;
 
+  if (!req.files) return res.status(400).json({ message: "لم يتم رفع أي ملف" });
+  const file = req.files.file;
+  const fileFormat = file.name.split(".").slice(-1)[0];
+  if (fileFormat != "png")
+    return res.status(400).json({ message: "الرجاء اختيار ملفات png فقط" });
+
   try {
     const subjects = await Subjects.create({
       subject_name,
@@ -35,7 +43,15 @@ const addSubject = async (req, res) => {
       season,
       faculty_id,
     });
-    res.status(200).json({ message: "نم إضافة المادة بنجاح" });
+    const subject_id = subjects.rows[0].subject_id;
+    file.mv(`${__dirname}/../subjects_icons/${subject_id}.png`, (err) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send(err);
+      } else {
+        res.status(200).json({ message: "نم إضافة المادة بنجاح" });
+      }
+    });
   } catch (error) {
     handleErrors(req, res, error);
   }
@@ -46,7 +62,13 @@ const deleteSubject = async (req, res) => {
   const { subject_id } = req.params;
 
   try {
+    const oldSubjectPath = `${__dirname}/../subjects_icons/${subject_id}.png`;
+
+    fs.unlink(oldSubjectPath, (err) => {
+      console.log(err);
+    });
     const subject = await Subjects.delete(subject_id);
+
     res.json({ message: "تم حذف المادة بنجاح" });
   } catch (error) {
     console.log(error);
@@ -60,6 +82,23 @@ const updateSubject = async (req, res) => {
   const { subject_name, year, season, faculty_id } = req.body;
 
   try {
+    if (req.files) {
+      const file = req.files.file;
+      const fileFormat = file.name.split(".").slice(-1)[0];
+      if (fileFormat != "png")
+        return res.status(400).json({ message: "الرجاء اختيار ملفات png فقط" });
+      const oldSubjectPath = `${__dirname}/../subjects_icons/${subject_id}.png`;
+
+      fs.unlink(oldSubjectPath, (err) => {
+        console.log(err);
+      });
+      file.mv(`${__dirname}/../subjects_icons/${subject_id}.png`, (err) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).send(err);
+        }
+      });
+    }
     const subject = await Subjects.update({
       subject_name,
       year,
@@ -88,6 +127,16 @@ const getSubjectBy = async (req, res) => {
     handleErrors(req, res, error);
   }
 };
+const getSubjectIcon = async (req, res) => {
+  const { subject_id } = req.params;
+
+  try {
+    let indexPath = path.join(__dirname, `../subjects_icons/${subject_id}.png`);
+    res.sendFile(indexPath);
+  } catch (error) {
+    handleErrors(req, res, error);
+  }
+};
 
 module.exports = {
   getSubject,
@@ -96,6 +145,7 @@ module.exports = {
   deleteSubject,
   updateSubject,
   getSubjectBy,
+  getSubjectIcon,
 };
 
 function handleErrors(req, res, error) {

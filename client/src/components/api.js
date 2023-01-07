@@ -17,6 +17,9 @@ const get = {
         `/api/subjects/by?faculty_id=${faculty}&year=${year}&season=${season}`
       );
     },
+    img: async ({ subject_id }) => {
+      return await api.get(`/api/subjects/${subject_id}/pdf`);
+    },
   },
   doctors: {
     by: async ({ subject }) => {

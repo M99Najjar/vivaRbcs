@@ -26,20 +26,22 @@ const getLectures = async (req, res) => {
 
 /*add lecture*/
 const addLecture = async (req, res) => {
-  const { lecture_name, doctor_id } = req.body;
+  const { lecture_name, doctor_id, lecture_type } = req.body;
   const user = req.user;
   user_id = user.user_id;
-  if (!req.files) {
-    return res.status(400).json({ message: "لم يتم رفع أي ملف" });
-  }
+  if (!req.files) return res.status(400).json({ message: "لم يتم رفع أي ملف" });
   const file = req.files.file;
   const fileFormat = file.name.split(".").slice(-1)[0];
-  if (fileFormat != "pdf") {
+  if (fileFormat != "pdf")
     return res.status(400).json({ message: "الرجاء اختيار ملفات pdf فقط" });
-  }
 
   try {
-    const lecture = await Lectures.create({ lecture_name, doctor_id, user_id });
+    const lecture = await Lectures.create({
+      lecture_name,
+      doctor_id,
+      user_id,
+      lecture_type,
+    });
     file.mv(`${__dirname}/../uploads/${lecture_name}.pdf`, (err) => {
       if (err) {
         console.log(err);
@@ -83,7 +85,7 @@ const updateLecture = async (req, res) => {
   const user = req.user;
   const user_id = user.user_id;
   const { lecture_id } = req.params;
-  const { lecture_name, doctor_id } = req.body;
+  const { lecture_name, doctor_id, lecture_type } = req.body;
 
   async function getOldLecture() {
     try {
@@ -102,7 +104,13 @@ const updateLecture = async (req, res) => {
           if (err) console.log("ERROR: " + err);
         });
       }
-      await Lectures.update({ lecture_name, doctor_id, user_id, lecture_id });
+      await Lectures.update({
+        lecture_name,
+        doctor_id,
+        user_id,
+        lecture_id,
+        lecture_type,
+      });
       res.json({ message: "تم حفظ التعديلات" });
     } catch (error) {
       handleErrors(req, res, error);
@@ -122,6 +130,7 @@ const updateLecture = async (req, res) => {
           doctor_id,
           user_id,
           lecture_id,
+          lecture_type,
         });
         const oldLecturePath = `${__dirname}/../uploads/${oldLecture.lecture_name}.pdf`;
         fs.unlink(oldLecturePath, (err) => {
@@ -196,6 +205,8 @@ function handleErrors(req, res, error) {
     case "23505":
       msg = "لا يمكن اضافة اكثر من محاضرة تحمل نفس الاسم";
       break;
+    case "23502":
+      msg = "يجب عليك ملئ جميع الخانات";
 
     default:
       msg = "حدث خطأ أثناء القيام بالعملية";

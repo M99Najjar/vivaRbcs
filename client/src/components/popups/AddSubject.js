@@ -5,6 +5,8 @@ import DropDown from "../form/DropDown";
 import ErrorsBox from "../form/ErrorsBox";
 import MessagesBox from "../form/MessagesBox";
 import TextInput from "../form/TextInput";
+import UploadBtn from "../form/UploadBtn";
+import Spinner from "../Spinner";
 
 const yearsList = [
   { year_id: 2, year_name: 2 },
@@ -28,10 +30,13 @@ const AddDoctor = ({ closePopup }) => {
   const defaultSeason = 1;
   const dafaultFaculty = user.user.user_faculty_id;
 
+  const [isLoading, setLoading] = useState(false);
   const [messages, setmessages] = useState();
   const [errors, setErrors] = useState();
 
   const [subjectName, setSubjectName] = useState([]);
+
+  const [file, setFile] = useState("");
 
   const [selectedFaculty, selectFaculty] = useState(dafaultFaculty);
   const [selectedYear, SelectYear] = useState(defaultYear);
@@ -47,9 +52,13 @@ const AddDoctor = ({ closePopup }) => {
   const handelSeasonDropdown = async (e) => {
     selectSeason(e.target.value);
   };
+  const handelFileBtn = async (e) => {
+    setFile(e.target.files[0]);
+  };
 
   const onsubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setErrors("");
     setmessages("");
     const formData = new FormData();
@@ -57,6 +66,7 @@ const AddDoctor = ({ closePopup }) => {
     formData.append("year", selectedYear);
     formData.append("season", selectedSeason);
     formData.append("faculty_id", selectedFaculty);
+    formData.append("file", file);
 
     try {
       const res = await api.post("/api/subjects", formData, {
@@ -67,9 +77,11 @@ const AddDoctor = ({ closePopup }) => {
       setmessages(res.data["message"]);
       setTimeout(() => {
         window.location.reload(false);
+        setLoading(false);
       }, 1000);
     } catch (error) {
       setErrors(error.response.data.message);
+      setLoading(false);
     }
   };
 
@@ -79,83 +91,92 @@ const AddDoctor = ({ closePopup }) => {
 
   return (
     <>
-      <div className="bg-white w-96 rounded-lg py-4 px-8 shadow-xl">
-        {/*----- Title ----- */}
-        <h1 className="text-center text-5xl mx-6 my-5">إضافة مادة</h1>
-        {/*----- form ----- */}
-        <form onSubmit={onsubmit}>
-          <div className="flex gap-3">
-            <div className="flex-1">
-              <TextInput
-                label="اسم المادة"
-                placeholder="مثلا: الفيزيولوجيا 3"
-                value={subjectName}
-                onChange={(e) => {
-                  setSubjectName(e.target.value);
-                }}
-              />
+      <Spinner isLoading={isLoading}>
+        <div className="bg-white w-96 rounded-lg py-4 px-8 shadow-xl">
+          {/*----- Title ----- */}
+          <h1 className="text-center text-5xl mx-6 my-5">إضافة مادة</h1>
+          {/*----- form ----- */}
+          <form onSubmit={onsubmit}>
+            <div className="flex gap-3 items-center">
+              <div className="flex-1">
+                <TextInput
+                  label="اسم المادة"
+                  placeholder="مثلا: الفيزيولوجيا 3"
+                  value={subjectName}
+                  onChange={(e) => {
+                    setSubjectName(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="pt-4">
+                <UploadBtn
+                  onChange={handelFileBtn}
+                  file={file}
+                  fileType={"image"}
+                />
+              </div>
             </div>
-          </div>
 
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <DropDown
-                label={"الجامعة"}
-                name="university"
-                options={universitiesList}
-              />
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <DropDown
+                  label={"الجامعة"}
+                  name="university"
+                  options={universitiesList}
+                />
+              </div>
+              <div className="flex-1">
+                <DropDown
+                  label={"الكلية"}
+                  value={selectedFaculty}
+                  options={facultiesList}
+                  name="faculty"
+                  onChange={handelFacultyDropdown}
+                />
+              </div>
             </div>
-            <div className="flex-1">
-              <DropDown
-                label={"الكلية"}
-                value={selectedFaculty}
-                options={facultiesList}
-                name="faculty"
-                onChange={handelFacultyDropdown}
-              />
-            </div>
-          </div>
 
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <DropDown
-                label={"السنة"}
-                value={selectedYear}
-                options={yearsList}
-                name="year"
-                onChange={handelYearDropdown}
-              />
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <DropDown
+                  label={"السنة"}
+                  value={selectedYear}
+                  options={yearsList}
+                  name="year"
+                  onChange={handelYearDropdown}
+                />
+              </div>
+              <div className="flex-1">
+                <DropDown
+                  label={"الفصل"}
+                  value={selectedSeason}
+                  options={seasonList}
+                  name="season"
+                  onChange={handelSeasonDropdown}
+                />
+              </div>
             </div>
-            <div className="flex-1">
-              <DropDown
-                label={"الفصل"}
-                value={selectedSeason}
-                options={seasonList}
-                name="season"
-                onChange={handelSeasonDropdown}
-              />
-            </div>
-          </div>
-          <MessagesBox messages={messages} />
-          <ErrorsBox errors={errors} />
+            <MessagesBox messages={messages} />
+            <ErrorsBox errors={errors} />
 
-          {/*----- buttons ----- */}
-          <div className="flex justify-center gap-8 mx-6 my-3">
-            <input
-              type="submit"
-              value="حفظ"
-              className="px-4 py-2 bg-green-600 rounded-lg text-white cursor-pointer"
-            />
+            {/*----- buttons ----- */}
+            <div className="flex justify-center gap-8 mx-6 my-3">
+              <input
+                type="submit"
+                value="حفظ"
+                className="px-4 py-2 bg-green-600 rounded-lg text-white cursor-pointer"
+              />
 
-            <div
-              className="px-4 py-2 bg-red-600 rounded-lg text-white cursor-pointer"
-              onClick={handelClose}
-            >
-              إلغاء
+              <div
+                className="px-4 py-2 bg-red-600 rounded-lg text-white cursor-pointer"
+                onClick={handelClose}
+              >
+                إلغاء
+              </div>
             </div>
-          </div>
-        </form>
-      </div>
+          </form>
+        </div>
+      </Spinner>
     </>
   );
 };

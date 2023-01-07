@@ -23,20 +23,14 @@ const SubjectPage = () => {
   const [subjectsRows, setSubjectRows] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState("");
 
-  const getData = async () => {
-    try {
-      const res = await api.get("/api/subjects", {
+  useEffect(() => {
+    api
+      .get("/api/subjects", {
         headers: {
           Authorization: `Basic ${user.token}`,
         },
-      });
-      setSubjectRows(res.data);
-    } catch (error) {
-      setErrors(error.response.data.message);
-    }
-  };
-  useEffect(() => {
-    getData();
+      })
+      .then((res) => setSubjectRows(res.data));
   }, []);
 
   function handlRowClick(selectedRow) {

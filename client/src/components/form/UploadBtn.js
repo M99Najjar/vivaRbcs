@@ -1,11 +1,17 @@
-const UploadBtn = ({ onChange, file }) => {
+const UploadBtn = ({ onChange, file, fileType }) => {
   return (
     <>
       <input
         id="mkmk"
         hidden
         type="file"
-        accept="application/pdf"
+        accept={
+          fileType === "pdf"
+            ? `application/pdf`
+            : fileType === "image"
+            ? `image/png,`
+            : ""
+        }
         onChange={onChange}
       />
       <label

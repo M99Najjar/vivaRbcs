@@ -5,6 +5,7 @@ import DropDown from "../form/DropDown";
 import ErrorsBox from "../form/ErrorsBox";
 import MessagesBox from "../form/MessagesBox";
 import TextInput from "../form/TextInput";
+import Spinner from "../Spinner";
 
 const yearsList = [
   { year_id: 2, year_name: 2 },
@@ -34,6 +35,7 @@ const EditDoctor = ({ closePopup, doctor }) => {
 
   const [messages, setmessages] = useState();
   const [errors, setErrors] = useState();
+  const [isLoading, setLoading] = useState(true);
 
   const [subjectsList, setSubjectsList] = useState([]);
 
@@ -63,6 +65,7 @@ const EditDoctor = ({ closePopup, doctor }) => {
 
   async function updateSubjectList({ faculty, year, season }) {
     if (faculty && year && season) {
+      setLoading(true);
       const subjectResponse = await api.get(
         `/api/subjects/by?faculty_id=${faculty}&year=${year}&season=${season}`,
         {
@@ -72,10 +75,12 @@ const EditDoctor = ({ closePopup, doctor }) => {
         }
       );
       setSubjectsList(subjectResponse.data);
+      setLoading(false);
     }
   }
 
   const onsubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     setErrors("");
     setmessages("");
@@ -94,8 +99,10 @@ const EditDoctor = ({ closePopup, doctor }) => {
         }
       );
       setmessages(res.data["message"]);
+      setLoading(false);
       window.location.reload(false);
     } catch (error) {
+      setLoading(false);
       setErrors(error.response.data.message);
     }
   };
@@ -136,103 +143,105 @@ const EditDoctor = ({ closePopup, doctor }) => {
 
   return (
     <>
-      <div className="bg-white w-[50rem] rounded-lg py-4 px-8 shadow-xl">
-        {/*----- Title ----- */}
-        <h1 className="text-center text-5xl mx-6 my-5">تعديل الدكتور</h1>
-        {/*----- form ----- */}
-        <form onSubmit={onsubmit}>
-          <div className="flex gap-3">
-            <div className="flex-1">
-              <TextInput
-                label="اسم الدكتور"
-                value={doctorName}
-                onChange={(e) => {
-                  setDoctorName(e.target.value);
-                }}
-              />
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <DropDown
-                label={"الجامعة"}
-                name="university"
-                options={universitiesList}
-              />
-            </div>
-            <div className="flex-1">
-              <DropDown
-                label={"الكلية"}
-                value={selectedFaculty}
-                options={facultiesList}
-                name="faculty"
-                onChange={handelFacultyDropdown}
-              />
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <DropDown
-                label={"السنة"}
-                value={selectedYear}
-                options={yearsList}
-                name="year"
-                onChange={handelYearDropdown}
-              />
-            </div>
-            <div className="flex-1">
-              <DropDown
-                label={"الفصل"}
-                value={selectedSeason}
-                options={seasonList}
-                name="season"
-                onChange={handelSeasonDropdown}
-              />
-            </div>
-          </div>
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <DropDown
-                label={"المادة"}
-                value={selectedSubject}
-                options={subjectsList}
-                name="subject"
-                onChange={handelSubjectDropdown}
-              />
-            </div>
-            <div className="flex-1"></div>
-          </div>
-          <MessagesBox messages={messages} />
-          <ErrorsBox errors={errors} />
-
-          {/*----- buttons ----- */}
-          <div className="flex justify-between gap-8 mx-6 my-3">
-            <div className="flex gap-4">
-              <input
-                type="submit"
-                value="حفظ التعديلات"
-                className="px-4 py-2 bg-green-600 rounded-lg text-white cursor-pointer"
-              />
-
-              <div
-                className="px-4 py-2 bg-red-600 rounded-lg text-white cursor-pointer"
-                onClick={handelDel}
-              >
-                حذف الدكتور
+      <Spinner isLoading={isLoading}>
+        <div className="bg-white w-[50rem] rounded-lg py-4 px-8 shadow-xl">
+          {/*----- Title ----- */}
+          <h1 className="text-center text-5xl mx-6 my-5">تعديل الدكتور</h1>
+          {/*----- form ----- */}
+          <form onSubmit={onsubmit}>
+            <div className="flex gap-3">
+              <div className="flex-1">
+                <TextInput
+                  label="اسم الدكتور"
+                  value={doctorName}
+                  onChange={(e) => {
+                    setDoctorName(e.target.value);
+                  }}
+                />
               </div>
             </div>
 
-            <div
-              className="px-4 py-2 bg-red-600 rounded-lg text-white cursor-pointer"
-              onClick={handelClose}
-            >
-              إلغاء
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <DropDown
+                  label={"الجامعة"}
+                  name="university"
+                  options={universitiesList}
+                />
+              </div>
+              <div className="flex-1">
+                <DropDown
+                  label={"الكلية"}
+                  value={selectedFaculty}
+                  options={facultiesList}
+                  name="faculty"
+                  onChange={handelFacultyDropdown}
+                />
+              </div>
             </div>
-          </div>
-        </form>
-      </div>
+
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <DropDown
+                  label={"السنة"}
+                  value={selectedYear}
+                  options={yearsList}
+                  name="year"
+                  onChange={handelYearDropdown}
+                />
+              </div>
+              <div className="flex-1">
+                <DropDown
+                  label={"الفصل"}
+                  value={selectedSeason}
+                  options={seasonList}
+                  name="season"
+                  onChange={handelSeasonDropdown}
+                />
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <DropDown
+                  label={"المادة"}
+                  value={selectedSubject}
+                  options={subjectsList}
+                  name="subject"
+                  onChange={handelSubjectDropdown}
+                />
+              </div>
+              <div className="flex-1"></div>
+            </div>
+            <MessagesBox messages={messages} />
+            <ErrorsBox errors={errors} />
+
+            {/*----- buttons ----- */}
+            <div className="flex justify-between gap-8 mx-6 my-3">
+              <div className="flex gap-4">
+                <input
+                  type="submit"
+                  value="حفظ التعديلات"
+                  className="px-4 py-2 bg-green-600 rounded-lg text-white cursor-pointer"
+                />
+
+                <div
+                  className="px-4 py-2 bg-red-600 rounded-lg text-white cursor-pointer"
+                  onClick={handelDel}
+                >
+                  حذف الدكتور
+                </div>
+              </div>
+
+              <div
+                className="px-4 py-2 bg-red-600 rounded-lg text-white cursor-pointer"
+                onClick={handelClose}
+              >
+                إلغاء
+              </div>
+            </div>
+          </form>
+        </div>
+      </Spinner>
     </>
   );
 };

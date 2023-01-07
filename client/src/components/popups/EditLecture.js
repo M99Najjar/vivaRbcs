@@ -6,6 +6,13 @@ import MessagesBox from "../form/MessagesBox";
 import TextInput from "../form/TextInput";
 import UploadBtn from "../form/UploadBtn";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import TabSelect from "../form/TabSelect";
+
+const lectureTypesList = [
+  { name: "محاضرة", value: "lecture" },
+  { name: "مبوب", value: "workbook" },
+  { name: "ملحق", value: "extra" },
+];
 
 const yearsList = [
   { year_id: 2, year_name: 2 },
@@ -33,7 +40,7 @@ const EditLecture = ({ closePopup, lecture }) => {
   const defaultLectureName = lecture.lecture_name;
   const defaultSubject = lecture.subject_id;
   const defaultDoctor = lecture.doctor_id;
-
+  const defaultType = lecture.lecture_type;
   const [messages, setmessages] = useState();
   const [errors, setErrors] = useState();
 
@@ -46,6 +53,7 @@ const EditLecture = ({ closePopup, lecture }) => {
   const [selectedSeason, selectSeason] = useState(defaultSeason);
   const [selectedSubject, selectSubject] = useState(defaultSubject);
   const [selectedDoctor, selectDoctor] = useState(defaultDoctor);
+  const [lectureType, setLectureType] = useState(defaultType);
   const [file, setFile] = useState("");
 
   const handelFileBtn = async (e) => {
@@ -76,6 +84,10 @@ const EditLecture = ({ closePopup, lecture }) => {
   const handelDoctorDropdown = (e) => {
     const thisDoctor = e.target.value;
     selectDoctor(thisDoctor);
+  };
+  const handelTypeSelect = (value) => {
+    console.log(value);
+    setLectureType(value);
   };
 
   async function updateSubjectList({ faculty, year, season }) {
@@ -109,6 +121,7 @@ const EditLecture = ({ closePopup, lecture }) => {
     formData.append("lecture_name", lectureName);
     formData.append("file", file);
     formData.append("doctor_id", selectedDoctor);
+    formData.append("lecture_type", lectureType);
 
     try {
       const res = await api.patch(
@@ -191,6 +204,11 @@ const EditLecture = ({ closePopup, lecture }) => {
               <UploadBtn onChange={handelFileBtn} file={file} />
             </div>
           </div>
+          <TabSelect
+            list={lectureTypesList}
+            onClick={handelTypeSelect}
+            value={lectureType}
+          />
 
           <div className="flex gap-4">
             <div className="flex-1">
